@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information authenticated via Google Sign-In.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User unique identifier matching auth.uid",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user",
+          "maxLength": 256
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Full display name of user",
+          "maxLength": 128
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Avatar image URL",
+          "maxLength": 1024
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last profile update timestamp"
+        }
+      },
+      "required": ["id", "email", "createdAt", "updatedAt"]
+    },
+    "StudyData": {
+      "title": "StudyData",
+      "description": "Study plans, disciplines, study cycles, and topic logs per user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User ID owning the study records",
+          "maxLength": 128
+        },
+        "discStateJson": {
+          "type": "string",
+          "description": "Serialized study state JSON containing all user study data",
+          "maxLength": 1000000
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last study sync timestamp"
+        }
+      },
+      "required": ["userId", "discStateJson", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile records restricted to the owner."
+    },
+    "/users/{userId}/data/{dataId}": {
+      "schema": "StudyData",
+      "description": "Synchronized study data and records belonging to the authenticated user."
+    }
+  }
+}
